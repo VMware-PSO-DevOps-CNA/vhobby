@@ -17,7 +17,7 @@ if (isset($_GET['cmd']) === true) {
     $client = new Predis\Client([
       'scheme' => 'tcp',
       'host'   => $host,
-      'port'   => 6379,
+      'port'   => 6380,
     ]);
 
     $client->set($_GET['key'], $_GET['value']);
@@ -30,7 +30,7 @@ if (isset($_GET['cmd']) === true) {
     $client = new Predis\Client([
       'scheme' => 'tcp',
       'host'   => $host,
-      'port'   => 6379,
+      'port'   => 6380,
     ]);
 
     $value = $client->get($_GET['key']);
