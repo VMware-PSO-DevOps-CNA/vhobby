@@ -4,12 +4,16 @@ services:
     links:
      - "redis-master"
      - "redis-slave"
-    build: 
-        context: "."
-        dockerfile: Dockerfile
+    build:
+        context: "./webapp"
+        dockerfile: Web-Dockerfile
     ports:
      - "80:80"
   redis-master:
-    image: "gcr.io/google_containers/redis:e2e"
+    build:
+        context: "./data"
+        dockerfile: Master-Dockerfile
   redis-slave:
-    image: "gcr.io/google_samples/gb-redisslave:v1"
+    build:
+        context: "./data"
+        dockerfile: Slave-Dockerfile
