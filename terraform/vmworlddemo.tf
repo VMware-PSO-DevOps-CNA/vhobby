@@ -34,7 +34,7 @@ resource "openstack_networking_subnet_v2" "subnet_vmwdemo" {
   cidr = "${var.subnet_cidr}"
   ip_version = 4
   enable_dhcp = true
-  dns_nameservers = ["8.8.8.8"]
+  dns_nameservers = ["10.132.71.1","8.8.8.8","8.8.4.4"]
 }
 
 
@@ -87,6 +87,9 @@ resource "openstack_networking_floatingip_v2" "floatip_vmwdemo" {
   port_id = "${openstack_networking_port_v2.port_vmwdemo.id}"
 }
 
+output "webserver_address" {
+    value = "${openstack_networking_floatingip_v2.floatip_vmwdemo.address}"
+}
 
 # Create a web server
 resource "openstack_compute_instance_v2" "instance_vmwdemo" {
@@ -97,5 +100,21 @@ resource "openstack_compute_instance_v2" "instance_vmwdemo" {
 
   network {
     port = "${openstack_networking_port_v2.port_vmwdemo.id}"
+  }
+
+  connection {
+      user = "ubuntu"
+      host = "${openstack_networking_floatingip_v2.floatip_vmwdemo.address}"
+      private_key = "${file("~/.ssh/${var.key_pair}")}"
+      timeout = "10m"
+  }
+
+  #provisioner "remote-exec" {
+  #  script = "scripts/wait_for_instance.sh"
+  #}
+
+  provisioner "local-exec" {
+    #command = "echo \"[webservers]\\n${openstack_networking_floatingip_v2.floatip_vmwdemo.address} ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/${var.key_pair}\" > inventory-terra &&  ansible-playbook -i inventory-terra ../ansible/webservers.yml"
+    command = "echo \"[webservers]\\n${openstack_networking_floatingip_v2.floatip_vmwdemo.address} ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/${var.key_pair}\" > inventory-terra "
   }
 }

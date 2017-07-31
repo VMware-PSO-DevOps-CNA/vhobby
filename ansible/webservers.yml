@@ -1,0 +1,51 @@
+---
+- hosts: webservers
+  become: yes
+  tasks:
+    - name: Update the apt-get cache
+      apt:
+        update_cache: yes
+
+    - name: Install required software components
+      apt: name={{ item }} update_cache=yes state=latest
+      with_items:
+          - apache2
+          - php5
+          - php-pear
+
+    - name: Copy Web application files
+      copy:
+          src: "{{ item.src }}"
+          dest: "{{ item.dest }}"
+          owner: ubuntu
+      with_items:
+          - { src: '../webapp/guestbook.php', dest: '/var/www/html/guestbook.php' }
+          - { src: '../webapp/controllers.js', dest: '/var/www/html/controllers.js' }
+          - { src: '../webapp/index.html', dest: '/var/www/html/index.html' }
+          - { src: '../webapp/img', dest: '/var/www/html' }
+          - { src: '../webapp/js', dest: '/var/www/html' }
+          - { src: '../webapp/css', dest: '/var/www/html' }
+
+    # Pear Channels
+    - name: Setup Redis PEAR Channel
+      command: pear channel-discover {{ item }}
+      with_items:
+          - pear.nrk.io
+      #when: pear.nrk.io is defined
+      register: channel_result
+      changed_when: "'initialized' not in channel_result.stdout"
+      # TODO: This will always error out the first time it's run.
+      failed_when: "'already initialized' not in channel_result.stdout"
+
+    # Pear Packages
+    - name: pear | install packages
+      command: pear install {{ item }}
+      with_items:
+          - nrk/Predis
+      #when: nrk/Predis is defined
+      register: pear_result
+      changed_when: "'already installed' not in pear_result.stdout"
+      failed_when: "'already installed' not in pear_result.stdout and pear_result.stderr"
+
+    - name: Start Apache
+      service: name=apache2 state=started enabled=yes

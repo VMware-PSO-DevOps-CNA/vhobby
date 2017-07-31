@@ -3,3 +3,5 @@
 /.project
 *.tfvars
 *.tfstate*
+*.retry
+inventory-terra
