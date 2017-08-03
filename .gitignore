@@ -5,3 +5,4 @@
 *.tfstate*
 *.retry
 inventory-terra
+.DS_Store
