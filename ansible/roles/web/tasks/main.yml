@@ -1,0 +1,52 @@
+---
+# Clean out web directory
+- find: path="/home/bitnami/htdocs" file_type=file
+  register: web_content_files
+
+- find: path="/home/bitnami/htdocs" file_type=directory
+  register: web_content_directories
+
+- name: Clear out directory
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: >
+    {{
+        web_content_files.files
+        + web_content_directories.files
+    }}
+
+- name: Copy Web application files
+  copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: bitnami
+  with_items:
+      - { src: '../webapp/guestbook.php', dest: '/home/bitnami/htdocs/guestbook.php' }
+      - { src: '../webapp/controllers.js', dest: '/home/bitnami/htdocs/controllers.js' }
+      - { src: '../webapp/index.html', dest: '/home/bitnami/htdocs/index.html' }
+      - { src: '../webapp/img', dest: '/home/bitnami/htdocs' }
+      - { src: '../webapp/js', dest: '/home/bitnami/htdocs' }
+      - { src: '../webapp/css', dest: '/home/bitnami/htdocs' }
+  notify: restart apache
+
+# Pear Channels
+- name: Setup Redis PEAR Channel
+  command: pear channel-discover {{ item }}
+  with_items:
+      - pear.nrk.io
+  #when: pear.nrk.io is defined
+  register: channel_result
+  changed_when: "'initialized' not in channel_result.stdout"
+  # TODO: This will always error out the first time it's run.
+  failed_when: "'already initialized' not in channel_result.stdout"
+
+# Pear Packages
+- name: pear | install packages
+  command: pear install {{ item }}
+  with_items:
+      - nrk/Predis
+  #when: nrk/Predis is defined
+  register: pear_result
+  changed_when: "'already installed' not in pear_result.stdout"
+  failed_when: "'already installed' not in pear_result.stdout and pear_result.stderr"

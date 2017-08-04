@@ -5,6 +5,7 @@ variable "auth_url" {}
 variable "external_gateway" {}
 variable "subnet_cidr" {}
 variable "image_id" {}
+variable "ansible_user" {}
 variable "flavor_id" {}
 variable "key_pair" {}
 
@@ -103,18 +104,18 @@ resource "openstack_compute_instance_v2" "instance_vmwdemo" {
   }
 
   connection {
-      user = "ubuntu"
+      user = "${var.ansible_user}"
       host = "${openstack_networking_floatingip_v2.floatip_vmwdemo.address}"
       private_key = "${file("~/.ssh/${var.key_pair}")}"
       timeout = "10m"
+ }
+
+  provisioner "remote-exec" {
+    inline = ["ls"]
   }
 
-  #provisioner "remote-exec" {
-  #  script = "scripts/wait_for_instance.sh"
-  #}
-
   provisioner "local-exec" {
-    #command = "echo \"[webservers]\\n${openstack_networking_floatingip_v2.floatip_vmwdemo.address} ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/${var.key_pair}\" > inventory-terra &&  ansible-playbook -i inventory-terra ../ansible/webservers.yml"
-    command = "echo \"[webservers]\\n${openstack_networking_floatingip_v2.floatip_vmwdemo.address} ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/${var.key_pair}\" > inventory-terra "
+    #command = "echo \"[webservers]\\n${openstack_networking_floatingip_v2.floatip_vmwdemo.address} ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/${var.key_pair} ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'\" > inventory-terra &&  ansible-playbook -i inventory-terra ../ansible/webservers.yml"
+    command = "cd ../ansible && echo \"[webservers]\\n${openstack_networking_floatingip_v2.floatip_vmwdemo.address} ansible_user=${var.ansible_user} ansible_ssh_private_key_file=~/.ssh/${var.key_pair} ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'\" > hosts &&  ansible-playbook -i hosts playbook.yml && cd -"
   }
 }

@@ -1,6 +1,6 @@
 ---
 - hosts: webservers
-    roles:
-        - server
-        - php
-        - redis
+  roles:
+    - common
+    - web
+    #- ansible-role-apache

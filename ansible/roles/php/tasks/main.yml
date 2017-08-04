@@ -1,0 +1,6 @@
+---
+- name: Install PHP
+  yum: name={{ item }} update_cache=yes state=latest
+  with_items:
+      - php5
+      - php-pear

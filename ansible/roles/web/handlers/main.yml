@@ -1,0 +1,18 @@
+---
+- name: restart apache
+  become: true
+  command: /etc/init.d/bitnami restart apache
+  ignore_errors: true
+
+#- name: Start Apache
+#  become: true
+#  command: /etc/init.d/bitnami start apache
+
+#- name: Stop Apache
+#  become: true
+#  command: /etc/init.d/bitnami stop apache
+
+#- name: Check Status of Apache
+#  become: true
+#  command: /etc/init.d/bitnami status apache
+#  register: apache_service_status
