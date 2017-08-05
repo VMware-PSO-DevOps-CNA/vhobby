@@ -1,6 +1,0 @@
----
-- hosts: webservers
-  roles:
-    - common
-    - web
-    #- ansible-role-apache

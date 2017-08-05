@@ -1,0 +1,15 @@
+---
+- name: Clear out redis config
+  become: true
+  file:
+    path: "/opt/bitnami/redis/etc/redis.conf"
+    state: absent
+
+- name: Write Redis config
+  become: true
+  template:
+    src: redis.conf.j2
+    dest: /opt/bitnami/redis/etc/redis.conf
+    owner: root
+    group: root
+    mode: 0644

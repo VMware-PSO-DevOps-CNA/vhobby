@@ -1,0 +1,18 @@
+---
+- name: restart redis
+  become: true
+  command: /etc/init.d/bitnami restart redis
+  ignore_errors: true
+
+#- name: Start Redis
+#  become: true
+#  command: /etc/init.d/bitnami start redis
+
+#- name: Stop Redis
+#  become: true
+#  command: /etc/init.d/bitnami stop redis
+
+#- name: Check Status of Redis
+#  become: true
+#  command: /etc/init.d/bitnami status redis
+#  register: redis_service_status

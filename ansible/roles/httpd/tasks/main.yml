@@ -1,7 +1,0 @@
----
-- name: Ensure httpd is installed
-  yum: pkg=httpd state=latest
-
-- name: Ensure httpd is running
-  service: name=httpd state=started enabled=yes
-  ignore_errors: yes

@@ -1,9 +1,0 @@
-# Install a role from GitHub
-- name: ansible-role-photon
-  src: https://github.com/vmware/ansible-role-photon
-
-- name: ansible-role-php
-  src: https://github.com/geerlingguy/ansible-role-php
-
-- name: ansible-role-apache
-  src: https://github.com/geerlingguy/ansible-role-apache

@@ -1,2 +1,6 @@
+[dbservers]
+10.40.207.143 ansible_user=bitnami ansible_ssh_private_key_file=~/.ssh/vmcloud ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+
+
 [webservers]
-10.40.207.237 ansible_user=bitnami ansible_ssh_private_key_file=~/.ssh/vmcloud ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+10.40.207.144 ansible_user=bitnami ansible_ssh_private_key_file=~/.ssh/vmcloud ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'

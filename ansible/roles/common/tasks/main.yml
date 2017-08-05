@@ -1,20 +1,5 @@
 ---
-#- name: Ensure yum is installed
-#  become: True
-#  command: bash -c "rpm -q yum || tdnf install -y yum" creates=/usr/bin/yum
-#
-#- name: Add repository
-#  yum_repository:
-#    name: epel
-#    description: EPEL YUM repo
-#    baseurl: http://mirror.us.leaseweb.net/epel/7/x86_64/
-#
 - name: Update apt
   become: true
   apt:
     update_cache: yes
-
-#- name: Install httpd
-#  yum: name={{ item }} update_cache=yes state=latest
-#  with_items:
-#      - httpd
