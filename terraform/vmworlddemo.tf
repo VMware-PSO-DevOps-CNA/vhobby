@@ -133,12 +133,25 @@ resource "openstack_networking_floatingip_v2" "floatip_vmwdemo_web" {
   port_id = "${openstack_networking_port_v2.port_vmwdemo_web.id}"
 }
 
+resource "null_resource" "inventory_and_vars_setup" {
+  # Prepare ansible variables
+  provisioner "local-exec" {
+    command = "cd ../ansible/group_vars && echo \"redis_master_ip : ${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master.fixed_ip}\\nredis_slave : false\\nredis_port : ${var.redis_port}\\n\" > all.yml && cd ../../terraform"
+  }
+
+  # Prepare ansible inventory
+  provisioner "local-exec" {
+    command = "cd ../ansible && echo \"[dbservers]\\nredis-master ip_address=${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master.fixed_ip} ansible_host=${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master.address} ansible_user=${var.ansible_user} ansible_ssh_private_key_file=~/.ssh/${var.key_pair} ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'\\nredis-slave ip_address=${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_slave.fixed_ip} ansible_host=${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_slave.address} ansible_user=${var.ansible_user} ansible_ssh_private_key_file=~/.ssh/${var.key_pair} ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'\\n\\n[webservers]\\nweb ip_address=${openstack_networking_floatingip_v2.floatip_vmwdemo_web.fixed_ip} ansible_host=${openstack_networking_floatingip_v2.floatip_vmwdemo_web.address} ansible_user=${var.ansible_user} ansible_ssh_private_key_file=~/.ssh/${var.key_pair} ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'\" > hosts && cd ../terraform"
+  }
+}
+
 # Create a redis master server
 resource "openstack_compute_instance_v2" "instance_vmwdemo_redis_master" {
   name = "instance_vmwdemo_redis_master"
   image_id = "${var.db_image_id}"
   flavor_id = "${var.flavor_id}"
   key_pair = "${var.key_pair}"
+  depends_on = ["null_resource.inventory_and_vars_setup"]
 
   network {
     port = "${openstack_networking_port_v2.port_vmwdemo_redis_master.id}"
@@ -149,16 +162,6 @@ resource "openstack_compute_instance_v2" "instance_vmwdemo_redis_master" {
     host = "${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master.address}"
     private_key = "${file("~/.ssh/${var.key_pair}")}"
     timeout = "10m"
-  }
-
-  # Prepare ansible variables
-  provisioner "local-exec" {
-    command = "cd ../ansible/group_vars && echo \"redis_master_ip : ${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master.fixed_ip}\\nredis_slave : false\\nredis_port : ${var.redis_port}\\n\" > all.yml && cd ../../terraform"
-  }
-
-  # Prepare ansible inventory
-  provisioner "local-exec" {
-    command = "cd ../ansible && echo \"[dbservers]\\nredis-master ip_address=${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master.fixed_ip} ansible_host=${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master.address} ansible_user=${var.ansible_user} ansible_ssh_private_key_file=~/.ssh/${var.key_pair} ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'\\nredis-slave ip_address=${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_slave.fixed_ip} ansible_host=${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_slave.address} ansible_user=${var.ansible_user} ansible_ssh_private_key_file=~/.ssh/${var.key_pair} ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'\\n\\n[webservers]\\nweb ip_address=${openstack_networking_floatingip_v2.floatip_vmwdemo_web.fixed_ip} ansible_host=${openstack_networking_floatingip_v2.floatip_vmwdemo_web.address} ansible_user=${var.ansible_user} ansible_ssh_private_key_file=~/.ssh/${var.key_pair} ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'\" > hosts && cd ../terraform"
   }
 
   # Trick to wait until ssh is ready to accept connections
@@ -178,7 +181,7 @@ resource "openstack_compute_instance_v2" "instance_vmwdemo_redis_slave" {
   image_id = "${var.db_image_id}"
   flavor_id = "${var.flavor_id}"
   key_pair = "${var.key_pair}"
-  depends_on = ["openstack_compute_instance_v2.instance_vmwdemo_redis_master"]
+  depends_on = ["null_resource.inventory_and_vars_setup"]
 
   network {
     port = "${openstack_networking_port_v2.port_vmwdemo_redis_slave.id}"
@@ -208,7 +211,7 @@ resource "openstack_compute_instance_v2" "instance_vmwdemo_web" {
   image_id = "${var.web_image_id}"
   flavor_id = "${var.flavor_id}"
   key_pair = "${var.key_pair}"
-  depends_on = ["openstack_compute_instance_v2.instance_vmwdemo_redis_master", "openstack_compute_instance_v2.instance_vmwdemo_redis_slave"]
+  depends_on = ["null_resource.inventory_and_vars_setup"]
 
   network {
     port = "${openstack_networking_port_v2.port_vmwdemo_web.id}"

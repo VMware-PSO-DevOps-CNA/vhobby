@@ -4,5 +4,6 @@
 *.tfvars
 *.tfstate*
 *.retry
-inventory-terra
+ansible/hosts
+ansible/group_vars/all.yml
 .DS_Store
