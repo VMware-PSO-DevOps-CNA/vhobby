@@ -18,6 +18,7 @@ if (isset($_GET['cmd']) === true) {
       'scheme' => 'tcp',
       'host'   => $host,
       'port'   => 6379,
+      'password' => '4eaaa6ff701ff7674ba408b71b09a5448e9814cdadab3b9a41766450f5f4225a'
     ]);
 
     $client->set($_GET['key'], $_GET['value']);
@@ -31,6 +32,7 @@ if (isset($_GET['cmd']) === true) {
       'scheme' => 'tcp',
       'host'   => $host,
       'port'   => 6379,
+      'password' => '4eaaa6ff701ff7674ba408b71b09a5448e9814cdadab3b9a41766450f5f4225a'
     ]);
 
     $value = $client->get($_GET['key']);

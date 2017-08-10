@@ -40,7 +40,6 @@ resource "openstack_networking_subnet_v2" "subnet_vmwdemo" {
   dns_nameservers = ["10.132.71.1","8.8.8.8","8.8.4.4"]
 }
 
-
 resource "openstack_networking_router_interface_v2" "router_interface_vmwdemo" {
   region = "nova"
   router_id = "${openstack_networking_router_v2.router_vmwdemo.id}"
@@ -80,6 +79,43 @@ resource "openstack_compute_secgroup_v2" "secgroup_vmwdemo" {
   }
 }
 
+# Create redis master networking
+resource "openstack_networking_port_v2" "port_vmwdemo_redis_master" {
+  name = "port_vmwdemo_redis_master"
+  network_id = "${openstack_networking_network_v2.network_vmwdemo.id}"
+  admin_state_up = "true"
+  security_group_ids = ["${openstack_compute_secgroup_v2.secgroup_vmwdemo.id}"]
+
+  fixed_ip {
+      "subnet_id" =  "${openstack_networking_subnet_v2.subnet_vmwdemo.id}"
+  }
+}
+
+resource "openstack_networking_floatingip_v2" "floatip_vmwdemo_redis_master" {
+  region = "nova"
+  pool = "ext-net"
+  port_id = "${openstack_networking_port_v2.port_vmwdemo_redis_master.id}"
+}
+
+# Create redis slave networking
+resource "openstack_networking_port_v2" "port_vmwdemo_redis_slave" {
+  name = "port_vmwdemo_redis_slave"
+  network_id = "${openstack_networking_network_v2.network_vmwdemo.id}"
+  admin_state_up = "true"
+  security_group_ids = ["${openstack_compute_secgroup_v2.secgroup_vmwdemo.id}"]
+
+  fixed_ip {
+      "subnet_id" =  "${openstack_networking_subnet_v2.subnet_vmwdemo.id}"
+  }
+}
+
+resource "openstack_networking_floatingip_v2" "floatip_vmwdemo_redis_slave" {
+  region = "nova"
+  pool = "ext-net"
+  port_id = "${openstack_networking_port_v2.port_vmwdemo_redis_slave.id}"
+}
+
+# Create web server networking
 resource "openstack_networking_port_v2" "port_vmwdemo_web" {
   name = "port_vmwdemo_web"
   network_id = "${openstack_networking_network_v2.network_vmwdemo.id}"
@@ -97,57 +133,32 @@ resource "openstack_networking_floatingip_v2" "floatip_vmwdemo_web" {
   port_id = "${openstack_networking_port_v2.port_vmwdemo_web.id}"
 }
 
-resource "openstack_networking_port_v2" "port_vmwdemo_db" {
-  name = "port_vmwdemo_db"
-  network_id = "${openstack_networking_network_v2.network_vmwdemo.id}"
-  admin_state_up = "true"
-  security_group_ids = ["${openstack_compute_secgroup_v2.secgroup_vmwdemo.id}"]
-
-  fixed_ip {
-      "subnet_id" =  "${openstack_networking_subnet_v2.subnet_vmwdemo.id}"
-  }
-}
-
-resource "openstack_networking_floatingip_v2" "floatip_vmwdemo_db" {
-  region = "nova"
-  pool = "ext-net"
-  port_id = "${openstack_networking_port_v2.port_vmwdemo_db.id}"
-}
-
-output "webserver_address" {
-    value = "${openstack_networking_floatingip_v2.floatip_vmwdemo_web.address}"
-}
-
-output "dbserver_address" {
-    value = "${openstack_networking_floatingip_v2.floatip_vmwdemo_db.address}"
-}
-
-# Create a db server
-resource "openstack_compute_instance_v2" "instance_vmwdemo_db" {
-  name = "instance_vmwdemo_db"
+# Create a redis master server
+resource "openstack_compute_instance_v2" "instance_vmwdemo_redis_master" {
+  name = "instance_vmwdemo_redis_master"
   image_id = "${var.db_image_id}"
   flavor_id = "${var.flavor_id}"
   key_pair = "${var.key_pair}"
 
   network {
-    port = "${openstack_networking_port_v2.port_vmwdemo_db.id}"
+    port = "${openstack_networking_port_v2.port_vmwdemo_redis_master.id}"
   }
 
   connection {
     user = "${var.ansible_user}"
-    host = "${openstack_networking_floatingip_v2.floatip_vmwdemo_db.address}"
+    host = "${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master.address}"
     private_key = "${file("~/.ssh/${var.key_pair}")}"
     timeout = "10m"
   }
 
   # Prepare ansible variables
   provisioner "local-exec" {
-    command = "cd ../ansible/group_vars && echo \"redis_master_ip : ${openstack_networking_floatingip_v2.floatip_vmwdemo_db.address}\\nredis_slave : false\\nredis_port : ${var.redis_port}\\n\" > all.yml && cd ../../terraform"
+    command = "cd ../ansible/group_vars && echo \"redis_master_ip : ${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master.fixed_ip}\\nredis_slave : false\\nredis_port : ${var.redis_port}\\n\" > all.yml && cd ../../terraform"
   }
 
   # Prepare ansible inventory
   provisioner "local-exec" {
-    command = "cd ../ansible && echo \"[dbservers]\\n${openstack_networking_floatingip_v2.floatip_vmwdemo_db.address} ansible_user=${var.ansible_user} ansible_ssh_private_key_file=~/.ssh/${var.key_pair} ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'\" > hosts && cd ../terraform"
+    command = "cd ../ansible && echo \"[dbservers]\\nredis-master ip_address=${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master.fixed_ip} ansible_host=${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master.address} ansible_user=${var.ansible_user} ansible_ssh_private_key_file=~/.ssh/${var.key_pair} ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'\\nredis-slave ip_address=${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_slave.fixed_ip} ansible_host=${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_slave.address} ansible_user=${var.ansible_user} ansible_ssh_private_key_file=~/.ssh/${var.key_pair} ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'\\n\\n[webservers]\\nweb ip_address=${openstack_networking_floatingip_v2.floatip_vmwdemo_web.fixed_ip} ansible_host=${openstack_networking_floatingip_v2.floatip_vmwdemo_web.address} ansible_user=${var.ansible_user} ansible_ssh_private_key_file=~/.ssh/${var.key_pair} ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'\" > hosts && cd ../terraform"
   }
 
   # Trick to wait until ssh is ready to accept connections
@@ -157,7 +168,37 @@ resource "openstack_compute_instance_v2" "instance_vmwdemo_db" {
 
   # Invoke Ansible playbook for Redis
   provisioner "local-exec" {
-    command = "cd ../ansible && ansible-playbook -i hosts dbservers.yml && cd ../terraform"
+    command = "cd ../ansible && ansible-playbook -i hosts dbservers.yml --limit \"redis-master\" && cd ../terraform"
+  }
+}
+
+# Create a redis slave server
+resource "openstack_compute_instance_v2" "instance_vmwdemo_redis_slave" {
+  name = "instance_vmwdemo_redis_slave"
+  image_id = "${var.db_image_id}"
+  flavor_id = "${var.flavor_id}"
+  key_pair = "${var.key_pair}"
+  depends_on = ["openstack_compute_instance_v2.instance_vmwdemo_redis_master"]
+
+  network {
+    port = "${openstack_networking_port_v2.port_vmwdemo_redis_slave.id}"
+  }
+
+  connection {
+    user = "${var.ansible_user}"
+    host = "${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_slave.address}"
+    private_key = "${file("~/.ssh/${var.key_pair}")}"
+    timeout = "10m"
+  }
+
+  # Trick to wait until ssh is ready to accept connections
+  provisioner "remote-exec" {
+    inline = ["ls"]
+  }
+
+  # Invoke Ansible playbook for Redis
+  provisioner "local-exec" {
+    command = "cd ../ansible && ansible-playbook -i hosts dbservers.yml --limit \"redis-slave\" -e \"redis_slave=true\" && cd ../terraform"
   }
 }
 
@@ -167,6 +208,7 @@ resource "openstack_compute_instance_v2" "instance_vmwdemo_web" {
   image_id = "${var.web_image_id}"
   flavor_id = "${var.flavor_id}"
   key_pair = "${var.key_pair}"
+  depends_on = ["openstack_compute_instance_v2.instance_vmwdemo_redis_master", "openstack_compute_instance_v2.instance_vmwdemo_redis_slave"]
 
   network {
     port = "${openstack_networking_port_v2.port_vmwdemo_web.id}"
@@ -179,11 +221,6 @@ resource "openstack_compute_instance_v2" "instance_vmwdemo_web" {
     timeout = "10m"
   }
 
-  # Prepare ansible inventory
-  provisioner "local-exec" {
-    command = "cd ../ansible && echo \"\\n\\n[webservers]\\n${openstack_networking_floatingip_v2.floatip_vmwdemo_web.address} ansible_user=${var.ansible_user} ansible_ssh_private_key_file=~/.ssh/${var.key_pair} ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'\" >> hosts && cd ../terraform"
-  }
-
   # Trick to wait until ssh is ready to accept connections
   provisioner "remote-exec" {
     inline = ["ls"]
@@ -192,4 +229,17 @@ resource "openstack_compute_instance_v2" "instance_vmwdemo_web" {
   provisioner "local-exec" {
     command = "cd ../ansible && ansible-playbook -i hosts webservers.yml && cd ../terraform"
   }
+}
+
+# Output floating ips for external connections
+output "webserver_address" {
+    value = "${openstack_networking_floatingip_v2.floatip_vmwdemo_web.address}"
+}
+
+output "redis_master_address" {
+    value = "${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master.address}"
+}
+
+output "redis_slave_address" {
+    value = "${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_slave.address}"
 }

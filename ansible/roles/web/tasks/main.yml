@@ -1,13 +1,22 @@
 ---
-# Clean out web directory
-- find: path="/home/bitnami/htdocs" file_type=file
+- name: Add Redis DB Server to /etc/hosts
+  become: true
+  lineinfile: dest=/etc/hosts
+                regexp='.*{{ item }}$'
+                line="{{ hostvars[item].ip_address }} {{item}}"
+                state=present
+  when: hostvars[item].ip_address is defined
+  with_items: "{{groups['all']}}"
+
+- name: Clean out web directory
+  become: true
+  find: path="/home/bitnami/htdocs" file_type=file
   register: web_content_files
 
 - find: path="/home/bitnami/htdocs" file_type=directory
   register: web_content_directories
 
-- name: Clear out directory
-  file:
+- file:
     path: "{{ item.path }}"
     state: absent
   with_items: >
@@ -32,6 +41,7 @@
 
 # Pear Channels
 - name: Setup Redis PEAR Channel
+  become: true
   command: pear channel-discover {{ item }}
   with_items:
       - pear.nrk.io
@@ -43,6 +53,7 @@
 
 # Pear Packages
 - name: pear | install packages
+  become: true
   command: pear install {{ item }}
   with_items:
       - nrk/Predis
