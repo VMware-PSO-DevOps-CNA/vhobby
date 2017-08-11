@@ -1,4 +1,0 @@
-redis_master_ip : 10.40.207.143
-redis_slave : false
-redis_port : 6379
-

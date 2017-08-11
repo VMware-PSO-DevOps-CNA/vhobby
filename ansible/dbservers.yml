@@ -1,5 +1,7 @@
 ---
 - hosts: dbservers
+  vars_files:
+    - "{{ env }}/group_vars/all.yml"
   roles:
     - common
     - redis
