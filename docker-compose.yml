@@ -1,19 +1,19 @@
-version: '2'
+version: "2"
 services:
-  web:
-    links:
-     - "redis-master"
-     - "redis-slave"
-    build:
-        context: "./webapp"
-        dockerfile: Web-Dockerfile
-    ports:
-     - "80:80"
-  redis-master:
-    build:
-        context: "./data"
-        dockerfile: Master-Dockerfile
-  redis-slave:
-    build:
-        context: "./data"
-        dockerfile: Slave-Dockerfile
+    web:
+        links:
+            - "redis-master"
+            - "redis-slave"
+        build:
+            context: "./webapp"
+            dockerfile: Web-Dockerfile
+        ports:
+            - "80:80"
+    redis-master:
+        build:
+            context: "./data/master"
+            dockerfile: Master-Dockerfile
+    redis-slave:
+        build:
+            context: "./data/slave"
+            dockerfile: Slave-Dockerfile

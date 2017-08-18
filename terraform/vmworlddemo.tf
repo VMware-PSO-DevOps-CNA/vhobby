@@ -10,6 +10,7 @@ variable "ansible_user" {}
 variable "flavor_id" {}
 variable "key_pair" {}
 variable "redis_port" {}
+variable "redis_password" {}
 
 # Configure the OpenStack Provider
 provider "openstack" {
@@ -58,8 +59,8 @@ resource "openstack_compute_secgroup_v2" "secgroup_vmwdemo" {
   }
 
   rule {
-    from_port   = 6379
-    to_port     = 6379
+    from_port   = "${terraform.env == "dev" ? 6300 : 6379}"
+    to_port     = "${terraform.env == "dev" ? 6400 : 6379}"
     ip_protocol = "tcp"
     cidr        = "0.0.0.0/0"
   }
@@ -136,7 +137,7 @@ resource "openstack_networking_floatingip_v2" "floatip_vmwdemo_web" {
 resource "null_resource" "inventory_and_vars_setup" {
   # Prepare ansible variables
   provisioner "local-exec" {
-    command = "cd ../ansible/${terraform.env}/group_vars && echo \"redis_master_ip : ${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master.fixed_ip}\\nredis_slave : false\\nredis_port : ${var.redis_port}\\n\" > all.yml && cd ../../../terraform"
+    command = "cd ../ansible/${terraform.env}/group_vars && echo \"redis_master_ip : ${openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master.fixed_ip}\\nredis_slave : false\\nredis_port : ${var.redis_port}\\nredis_password : ${var.redis_password}\\n\" > all.yml && cd ../../../terraform"
   }
 
   # Prepare ansible inventory
