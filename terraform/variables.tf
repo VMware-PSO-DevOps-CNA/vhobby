@@ -1,0 +1,13 @@
+variable "user_name" {}
+variable "tenant_name" {}
+variable "password" {}
+variable "auth_url" {}
+variable "external_gateway" {}
+variable "subnet_cidr" {}
+variable "db_image_id" {}
+variable "web_image_id" {}
+variable "ansible_user" {}
+variable "flavor_id" {}
+variable "key_pair" {}
+variable "redis_port" {}
+variable "redis_password" {}

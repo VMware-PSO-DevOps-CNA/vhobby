@@ -1,9 +1,17 @@
 ---
+- name: Shutdown redis
+  become: true
+  command: /etc/init.d/bitnami stop redis
+
 - name: Clear out redis config
   become: true
   file:
     path: "/opt/bitnami/redis/etc/redis.conf"
     state: absent
+
+- name: Open redis port in firewall
+  become: true
+  command: iptables -A INPUT -p tcp --dport {{ redis_port }} -j ACCEPT
 
 - name: Write Redis config
   become: true
@@ -13,3 +21,4 @@
     owner: root
     group: root
     mode: 0644
+  notify: start redis

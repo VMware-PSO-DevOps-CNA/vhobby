@@ -1,0 +1,555 @@
+{
+    "version": 3,
+    "terraform_version": "0.9.11",
+    "serial": 3,
+    "lineage": "4db48af9-522e-4b35-8d14-699aab5472b7",
+    "modules": [
+        {
+            "path": [
+                "root"
+            ],
+            "outputs": {
+                "redis_master_address": {
+                    "sensitive": false,
+                    "type": "string",
+                    "value": "10.40.207.155"
+                },
+                "redis_slave_address": {
+                    "sensitive": false,
+                    "type": "string",
+                    "value": "10.40.207.156"
+                },
+                "webserver_address": {
+                    "sensitive": false,
+                    "type": "string",
+                    "value": "10.40.207.157"
+                }
+            },
+            "resources": {
+                "null_resource.inventory_and_vars_setup": {
+                    "type": "null_resource",
+                    "depends_on": [
+                        "openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master",
+                        "openstack_networking_floatingip_v2.floatip_vmwdemo_redis_slave",
+                        "openstack_networking_floatingip_v2.floatip_vmwdemo_web"
+                    ],
+                    "primary": {
+                        "id": "1520264868448329711",
+                        "attributes": {
+                            "id": "1520264868448329711"
+                        },
+                        "meta": {},
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                },
+                "openstack_compute_instance_v2.instance_vmwdemo_redis_master": {
+                    "type": "openstack_compute_instance_v2",
+                    "depends_on": [
+                        "null_resource.inventory_and_vars_setup",
+                        "openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master",
+                        "openstack_networking_port_v2.port_vmwdemo_redis_master"
+                    ],
+                    "primary": {
+                        "id": "73d277d9-7552-4233-810e-54d6d341f7e8",
+                        "attributes": {
+                            "access_ip_v4": "",
+                            "access_ip_v6": "",
+                            "all_metadata.%": "0",
+                            "availability_zone": "nova",
+                            "flavor_id": "3",
+                            "flavor_name": "m1.medium",
+                            "force_delete": "false",
+                            "id": "73d277d9-7552-4233-810e-54d6d341f7e8",
+                            "image_id": "5463ff57-bd36-40fd-90d3-d2001c8f5e9e",
+                            "image_name": "debian-8-redis_ssh-x86_64",
+                            "key_pair": "vmcloud",
+                            "name": "instance_vmwdemo_redis_master_stage",
+                            "network.#": "1",
+                            "network.0.access_network": "false",
+                            "network.0.fixed_ip_v4": "",
+                            "network.0.fixed_ip_v6": "",
+                            "network.0.floating_ip": "",
+                            "network.0.mac": "",
+                            "network.0.name": "",
+                            "network.0.port": "74aff6ab-4c07-4024-b25b-dca90866ce5b",
+                            "network.0.uuid": "",
+                            "security_groups.#": "1",
+                            "security_groups.3839773327": "secgroup_vmwdemo_stage",
+                            "stop_before_destroy": "false",
+                            "volume.#": "0"
+                        },
+                        "meta": {
+                            "e2bfb730-ecaa-11e6-8f88-34363bc7c4c0": {
+                                "create": 1800000000000,
+                                "delete": 1800000000000,
+                                "update": 1800000000000
+                            }
+                        },
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                },
+                "openstack_compute_instance_v2.instance_vmwdemo_redis_slave": {
+                    "type": "openstack_compute_instance_v2",
+                    "depends_on": [
+                        "null_resource.inventory_and_vars_setup",
+                        "openstack_networking_floatingip_v2.floatip_vmwdemo_redis_slave",
+                        "openstack_networking_port_v2.port_vmwdemo_redis_slave"
+                    ],
+                    "primary": {
+                        "id": "ca24ee70-f35c-4ad0-9675-9c43792790db",
+                        "attributes": {
+                            "access_ip_v4": "",
+                            "access_ip_v6": "",
+                            "all_metadata.%": "0",
+                            "availability_zone": "nova",
+                            "flavor_id": "3",
+                            "flavor_name": "m1.medium",
+                            "force_delete": "false",
+                            "id": "ca24ee70-f35c-4ad0-9675-9c43792790db",
+                            "image_id": "5463ff57-bd36-40fd-90d3-d2001c8f5e9e",
+                            "image_name": "debian-8-redis_ssh-x86_64",
+                            "key_pair": "vmcloud",
+                            "name": "instance_vmwdemo_redis_slave_stage",
+                            "network.#": "1",
+                            "network.0.access_network": "false",
+                            "network.0.fixed_ip_v4": "",
+                            "network.0.fixed_ip_v6": "",
+                            "network.0.floating_ip": "",
+                            "network.0.mac": "",
+                            "network.0.name": "",
+                            "network.0.port": "80cb7475-926a-4ed1-b71b-4f0056705d98",
+                            "network.0.uuid": "",
+                            "security_groups.#": "1",
+                            "security_groups.3839773327": "secgroup_vmwdemo_stage",
+                            "stop_before_destroy": "false",
+                            "volume.#": "0"
+                        },
+                        "meta": {
+                            "e2bfb730-ecaa-11e6-8f88-34363bc7c4c0": {
+                                "create": 1800000000000,
+                                "delete": 1800000000000,
+                                "update": 1800000000000
+                            }
+                        },
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                },
+                "openstack_compute_instance_v2.instance_vmwdemo_web": {
+                    "type": "openstack_compute_instance_v2",
+                    "depends_on": [
+                        "null_resource.inventory_and_vars_setup",
+                        "openstack_networking_floatingip_v2.floatip_vmwdemo_web",
+                        "openstack_networking_port_v2.port_vmwdemo_web"
+                    ],
+                    "primary": {
+                        "id": "caadf07e-d639-4a37-9582-a6ae4e411e6f",
+                        "attributes": {
+                            "access_ip_v4": "",
+                            "access_ip_v6": "",
+                            "all_metadata.%": "0",
+                            "availability_zone": "nova",
+                            "flavor_id": "3",
+                            "flavor_name": "m1.medium",
+                            "force_delete": "false",
+                            "id": "caadf07e-d639-4a37-9582-a6ae4e411e6f",
+                            "image_id": "c658811b-5698-4bae-8d28-48e806a95d92",
+                            "image_name": "debian-8-lampstack_ssh-x86_64",
+                            "key_pair": "vmcloud",
+                            "name": "instance_vmwdemo_web_stage",
+                            "network.#": "1",
+                            "network.0.access_network": "false",
+                            "network.0.fixed_ip_v4": "",
+                            "network.0.fixed_ip_v6": "",
+                            "network.0.floating_ip": "",
+                            "network.0.mac": "",
+                            "network.0.name": "",
+                            "network.0.port": "57995859-5749-46b6-b308-e9ba72728bd7",
+                            "network.0.uuid": "",
+                            "security_groups.#": "1",
+                            "security_groups.3839773327": "secgroup_vmwdemo_stage",
+                            "stop_before_destroy": "false",
+                            "volume.#": "0"
+                        },
+                        "meta": {
+                            "e2bfb730-ecaa-11e6-8f88-34363bc7c4c0": {
+                                "create": 1800000000000,
+                                "delete": 1800000000000,
+                                "update": 1800000000000
+                            }
+                        },
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                },
+                "openstack_compute_secgroup_v2.secgroup_vmwdemo": {
+                    "type": "openstack_compute_secgroup_v2",
+                    "depends_on": [],
+                    "primary": {
+                        "id": "e72463d9-7b82-418e-9ac5-0b01a64c2113",
+                        "attributes": {
+                            "description": "a security group",
+                            "id": "e72463d9-7b82-418e-9ac5-0b01a64c2113",
+                            "name": "secgroup_vmwdemo_stage",
+                            "region": "",
+                            "rule.#": "4",
+                            "rule.1042372453.cidr": "0.0.0.0/0",
+                            "rule.1042372453.from_group_id": "",
+                            "rule.1042372453.from_port": "6379",
+                            "rule.1042372453.id": "15d1f313-5b74-4e76-976b-04fa1f0375aa",
+                            "rule.1042372453.ip_protocol": "tcp",
+                            "rule.1042372453.self": "false",
+                            "rule.1042372453.to_port": "6379",
+                            "rule.2180185248.cidr": "0.0.0.0/0",
+                            "rule.2180185248.from_group_id": "",
+                            "rule.2180185248.from_port": "-1",
+                            "rule.2180185248.id": "c7037f30-3006-4c4c-b612-b96ccb45fdaf",
+                            "rule.2180185248.ip_protocol": "icmp",
+                            "rule.2180185248.self": "false",
+                            "rule.2180185248.to_port": "-1",
+                            "rule.3719211069.cidr": "0.0.0.0/0",
+                            "rule.3719211069.from_group_id": "",
+                            "rule.3719211069.from_port": "80",
+                            "rule.3719211069.id": "4eef9cbb-64d4-474f-8876-c497efda43c1",
+                            "rule.3719211069.ip_protocol": "tcp",
+                            "rule.3719211069.self": "false",
+                            "rule.3719211069.to_port": "80",
+                            "rule.836640770.cidr": "0.0.0.0/0",
+                            "rule.836640770.from_group_id": "",
+                            "rule.836640770.from_port": "22",
+                            "rule.836640770.id": "44cba809-6c62-4cce-97cc-21452331f742",
+                            "rule.836640770.ip_protocol": "tcp",
+                            "rule.836640770.self": "false",
+                            "rule.836640770.to_port": "22"
+                        },
+                        "meta": {
+                            "e2bfb730-ecaa-11e6-8f88-34363bc7c4c0": {
+                                "delete": 600000000000
+                            }
+                        },
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                },
+                "openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master": {
+                    "type": "openstack_networking_floatingip_v2",
+                    "depends_on": [
+                        "openstack_networking_port_v2.port_vmwdemo_redis_master"
+                    ],
+                    "primary": {
+                        "id": "fe0bc843-5d98-4a90-b92a-6601ce58b79b",
+                        "attributes": {
+                            "address": "10.40.207.155",
+                            "fixed_ip": "192.168.199.3",
+                            "id": "fe0bc843-5d98-4a90-b92a-6601ce58b79b",
+                            "pool": "ext-net",
+                            "port_id": "74aff6ab-4c07-4024-b25b-dca90866ce5b",
+                            "region": "nova",
+                            "tenant_id": "c4d0b0ec479448ab9c391d941f88ae5e"
+                        },
+                        "meta": {
+                            "e2bfb730-ecaa-11e6-8f88-34363bc7c4c0": {
+                                "create": 600000000000,
+                                "delete": 600000000000
+                            }
+                        },
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                },
+                "openstack_networking_floatingip_v2.floatip_vmwdemo_redis_slave": {
+                    "type": "openstack_networking_floatingip_v2",
+                    "depends_on": [
+                        "openstack_networking_port_v2.port_vmwdemo_redis_slave"
+                    ],
+                    "primary": {
+                        "id": "be732309-2078-49e3-be99-df7d889c94e3",
+                        "attributes": {
+                            "address": "10.40.207.156",
+                            "fixed_ip": "192.168.199.4",
+                            "id": "be732309-2078-49e3-be99-df7d889c94e3",
+                            "pool": "ext-net",
+                            "port_id": "80cb7475-926a-4ed1-b71b-4f0056705d98",
+                            "region": "nova",
+                            "tenant_id": "c4d0b0ec479448ab9c391d941f88ae5e"
+                        },
+                        "meta": {
+                            "e2bfb730-ecaa-11e6-8f88-34363bc7c4c0": {
+                                "create": 600000000000,
+                                "delete": 600000000000
+                            }
+                        },
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                },
+                "openstack_networking_floatingip_v2.floatip_vmwdemo_web": {
+                    "type": "openstack_networking_floatingip_v2",
+                    "depends_on": [
+                        "openstack_networking_port_v2.port_vmwdemo_web"
+                    ],
+                    "primary": {
+                        "id": "b5b0a907-f07b-4123-93b4-2c39b9929a70",
+                        "attributes": {
+                            "address": "10.40.207.157",
+                            "fixed_ip": "192.168.199.5",
+                            "id": "b5b0a907-f07b-4123-93b4-2c39b9929a70",
+                            "pool": "ext-net",
+                            "port_id": "57995859-5749-46b6-b308-e9ba72728bd7",
+                            "region": "nova",
+                            "tenant_id": "c4d0b0ec479448ab9c391d941f88ae5e"
+                        },
+                        "meta": {
+                            "e2bfb730-ecaa-11e6-8f88-34363bc7c4c0": {
+                                "create": 600000000000,
+                                "delete": 600000000000
+                            }
+                        },
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                },
+                "openstack_networking_network_v2.network_vmwdemo": {
+                    "type": "openstack_networking_network_v2",
+                    "depends_on": [],
+                    "primary": {
+                        "id": "ebb0a0f5-c34b-4b05-be91-015300406ca7",
+                        "attributes": {
+                            "admin_state_up": "true",
+                            "id": "ebb0a0f5-c34b-4b05-be91-015300406ca7",
+                            "name": "network_vmwdemo_stage",
+                            "region": "",
+                            "shared": "false",
+                            "tenant_id": "c4d0b0ec479448ab9c391d941f88ae5e"
+                        },
+                        "meta": {
+                            "e2bfb730-ecaa-11e6-8f88-34363bc7c4c0": {
+                                "create": 600000000000,
+                                "delete": 600000000000
+                            }
+                        },
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                },
+                "openstack_networking_port_v2.port_vmwdemo_redis_master": {
+                    "type": "openstack_networking_port_v2",
+                    "depends_on": [
+                        "openstack_compute_secgroup_v2.secgroup_vmwdemo",
+                        "openstack_networking_network_v2.network_vmwdemo",
+                        "openstack_networking_subnet_v2.subnet_vmwdemo"
+                    ],
+                    "primary": {
+                        "id": "74aff6ab-4c07-4024-b25b-dca90866ce5b",
+                        "attributes": {
+                            "admin_state_up": "true",
+                            "all_fixed_ips.#": "1",
+                            "all_fixed_ips.0": "192.168.199.3",
+                            "allowed_address_pairs.#": "0",
+                            "device_id": "73d277d9-7552-4233-810e-54d6d341f7e8",
+                            "device_owner": "compute:None",
+                            "fixed_ip.#": "1",
+                            "fixed_ip.0.ip_address": "",
+                            "fixed_ip.0.subnet_id": "aec75087-aacf-4752-a118-2d1a35cb9c5a",
+                            "id": "74aff6ab-4c07-4024-b25b-dca90866ce5b",
+                            "mac_address": "fa:16:3e:2e:a2:8a",
+                            "name": "port_vmwdemo_redis_master_stage",
+                            "network_id": "ebb0a0f5-c34b-4b05-be91-015300406ca7",
+                            "region": "",
+                            "security_group_ids.#": "1",
+                            "security_group_ids.499844513": "e72463d9-7b82-418e-9ac5-0b01a64c2113",
+                            "tenant_id": "c4d0b0ec479448ab9c391d941f88ae5e"
+                        },
+                        "meta": {
+                            "e2bfb730-ecaa-11e6-8f88-34363bc7c4c0": {
+                                "create": 600000000000,
+                                "delete": 600000000000
+                            }
+                        },
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                },
+                "openstack_networking_port_v2.port_vmwdemo_redis_slave": {
+                    "type": "openstack_networking_port_v2",
+                    "depends_on": [
+                        "openstack_compute_secgroup_v2.secgroup_vmwdemo",
+                        "openstack_networking_network_v2.network_vmwdemo",
+                        "openstack_networking_subnet_v2.subnet_vmwdemo"
+                    ],
+                    "primary": {
+                        "id": "80cb7475-926a-4ed1-b71b-4f0056705d98",
+                        "attributes": {
+                            "admin_state_up": "true",
+                            "all_fixed_ips.#": "1",
+                            "all_fixed_ips.0": "192.168.199.4",
+                            "allowed_address_pairs.#": "0",
+                            "device_id": "ca24ee70-f35c-4ad0-9675-9c43792790db",
+                            "device_owner": "compute:None",
+                            "fixed_ip.#": "1",
+                            "fixed_ip.0.ip_address": "",
+                            "fixed_ip.0.subnet_id": "aec75087-aacf-4752-a118-2d1a35cb9c5a",
+                            "id": "80cb7475-926a-4ed1-b71b-4f0056705d98",
+                            "mac_address": "fa:16:3e:ea:d4:aa",
+                            "name": "port_vmwdemo_redis_slave_stage",
+                            "network_id": "ebb0a0f5-c34b-4b05-be91-015300406ca7",
+                            "region": "",
+                            "security_group_ids.#": "1",
+                            "security_group_ids.499844513": "e72463d9-7b82-418e-9ac5-0b01a64c2113",
+                            "tenant_id": "c4d0b0ec479448ab9c391d941f88ae5e"
+                        },
+                        "meta": {
+                            "e2bfb730-ecaa-11e6-8f88-34363bc7c4c0": {
+                                "create": 600000000000,
+                                "delete": 600000000000
+                            }
+                        },
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                },
+                "openstack_networking_port_v2.port_vmwdemo_web": {
+                    "type": "openstack_networking_port_v2",
+                    "depends_on": [
+                        "openstack_compute_secgroup_v2.secgroup_vmwdemo",
+                        "openstack_networking_network_v2.network_vmwdemo",
+                        "openstack_networking_subnet_v2.subnet_vmwdemo"
+                    ],
+                    "primary": {
+                        "id": "57995859-5749-46b6-b308-e9ba72728bd7",
+                        "attributes": {
+                            "admin_state_up": "true",
+                            "all_fixed_ips.#": "1",
+                            "all_fixed_ips.0": "192.168.199.5",
+                            "allowed_address_pairs.#": "0",
+                            "device_id": "caadf07e-d639-4a37-9582-a6ae4e411e6f",
+                            "device_owner": "compute:None",
+                            "fixed_ip.#": "1",
+                            "fixed_ip.0.ip_address": "",
+                            "fixed_ip.0.subnet_id": "aec75087-aacf-4752-a118-2d1a35cb9c5a",
+                            "id": "57995859-5749-46b6-b308-e9ba72728bd7",
+                            "mac_address": "fa:16:3e:bf:95:00",
+                            "name": "port_vmwdemo_web_stage",
+                            "network_id": "ebb0a0f5-c34b-4b05-be91-015300406ca7",
+                            "region": "",
+                            "security_group_ids.#": "1",
+                            "security_group_ids.499844513": "e72463d9-7b82-418e-9ac5-0b01a64c2113",
+                            "tenant_id": "c4d0b0ec479448ab9c391d941f88ae5e"
+                        },
+                        "meta": {
+                            "e2bfb730-ecaa-11e6-8f88-34363bc7c4c0": {
+                                "create": 600000000000,
+                                "delete": 600000000000
+                            }
+                        },
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                },
+                "openstack_networking_router_interface_v2.router_interface_vmwdemo": {
+                    "type": "openstack_networking_router_interface_v2",
+                    "depends_on": [
+                        "openstack_networking_router_v2.router_vmwdemo",
+                        "openstack_networking_subnet_v2.subnet_vmwdemo"
+                    ],
+                    "primary": {
+                        "id": "e27c5a1c-c669-42af-a0f8-891034b9252f",
+                        "attributes": {
+                            "id": "e27c5a1c-c669-42af-a0f8-891034b9252f",
+                            "region": "nova",
+                            "router_id": "7f9d4a13-742d-4239-8fbc-c325bef0cf39",
+                            "subnet_id": "aec75087-aacf-4752-a118-2d1a35cb9c5a"
+                        },
+                        "meta": {
+                            "e2bfb730-ecaa-11e6-8f88-34363bc7c4c0": {
+                                "create": 600000000000,
+                                "delete": 600000000000
+                            }
+                        },
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                },
+                "openstack_networking_router_v2.router_vmwdemo": {
+                    "type": "openstack_networking_router_v2",
+                    "depends_on": [],
+                    "primary": {
+                        "id": "7f9d4a13-742d-4239-8fbc-c325bef0cf39",
+                        "attributes": {
+                            "admin_state_up": "true",
+                            "distributed": "false",
+                            "external_gateway": "d5c89e0d-75e0-4806-867a-19ece99226f0",
+                            "id": "7f9d4a13-742d-4239-8fbc-c325bef0cf39",
+                            "name": "router_vmwdemo_stage",
+                            "region": "nova",
+                            "tenant_id": "c4d0b0ec479448ab9c391d941f88ae5e"
+                        },
+                        "meta": {
+                            "e2bfb730-ecaa-11e6-8f88-34363bc7c4c0": {
+                                "create": 600000000000,
+                                "delete": 600000000000
+                            }
+                        },
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                },
+                "openstack_networking_subnet_v2.subnet_vmwdemo": {
+                    "type": "openstack_networking_subnet_v2",
+                    "depends_on": [
+                        "openstack_networking_network_v2.network_vmwdemo"
+                    ],
+                    "primary": {
+                        "id": "aec75087-aacf-4752-a118-2d1a35cb9c5a",
+                        "attributes": {
+                            "allocation_pools.#": "1",
+                            "allocation_pools.0.end": "192.168.199.254",
+                            "allocation_pools.0.start": "192.168.199.2",
+                            "cidr": "192.168.199.0/24",
+                            "dns_nameservers.#": "3",
+                            "dns_nameservers.1434477439": "10.132.71.1",
+                            "dns_nameservers.3811298194": "8.8.4.4",
+                            "dns_nameservers.3817307869": "8.8.8.8",
+                            "enable_dhcp": "true",
+                            "gateway_ip": "192.168.199.1",
+                            "host_routes.#": "0",
+                            "id": "aec75087-aacf-4752-a118-2d1a35cb9c5a",
+                            "ip_version": "4",
+                            "name": "subnet_vmwdemo_stage",
+                            "network_id": "ebb0a0f5-c34b-4b05-be91-015300406ca7",
+                            "region": "",
+                            "tenant_id": "c4d0b0ec479448ab9c391d941f88ae5e"
+                        },
+                        "meta": {
+                            "e2bfb730-ecaa-11e6-8f88-34363bc7c4c0": {
+                                "create": 600000000000,
+                                "delete": 600000000000
+                            }
+                        },
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                }
+            },
+            "depends_on": []
+        }
+    ]
+}
+
