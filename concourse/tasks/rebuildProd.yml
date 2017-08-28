@@ -1,0 +1,17 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: fcarta29/vmware
+    tag: '1.0'
+
+inputs:
+- name: project_src
+
+run:
+  dir: project_src
+  args:
+    - prod
+  path: concourse/scripts/rebuild.sh

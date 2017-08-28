@@ -4,9 +4,11 @@
 *.tfvars
 *.tfstate*
 *.retry
-ansible/dev/hosts
+ansible/test/hosts
 ansible/stage/hosts
-ansible/dev/group_vars/all.yml
+ansible/prod/hosts
+ansible/test/group_vars/all.yml
 ansible/stage/group_vars/all.yml
+ansible/prod/group_vars/all.yml
 .terraform
 .DS_Store

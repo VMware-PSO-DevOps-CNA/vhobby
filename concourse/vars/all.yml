@@ -1,0 +1,30 @@
+project_src_uri: git@github.com:VMware-PSO-DevOps-CNA/vhobby.git
+project_src_branch: terraform
+project_src_private_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEowIBAAKCAQEAzTm5IDar8Pgta9smy/Zm1HW2gj5oeTtnNI/qtjhz9vm5hzJ/
+    wrnkZLO/AzBhyPtMX17PCtT87ySZjxb33Ey+HmcQq2AG0wZDcsb/K+kV2Q2K7Zx3
+    TDtBFEZsyZEoZ/iVNulJHUTEfp/kspKmCMBDcKt99IpMvnHmKdsN5Qnpc6jQlNdF
+    q0QUY+xGAm+DdDlkMV/I6uw6gtOM2k/daPQjXH1uAjoMDr96dOBtGtHi4lpiupE/
+    KXhHsmvoUzfKBv7VMVjlXgL66U0eSibKg0VMDAfQcgXYbUp7ouLueI9NJTZhuLQl
+    adJrtq1LRYWvlGXE+3nqm+t4WH9DiXSlh7Iw1wIDAQABAoIBAEb6McasYecjTkJB
+    NzfPbl0IoSiGgQd8vgL1y01eVO0UDVBu7LTiKdWSPPvTXd5u20kYty6d3ySuWdWd
+    MfglKpPFPYSn33RYdDdcD6CWKpI5FtV7Cd95ltZ2TOWhqIHc/W5SXJEc2YCZuDTy
+    dy4LoMd06EkNE+HB7sKHGlUeinkPSQkFpzmN8f1ja1jQQT5VlpVj3vA26OFT9xuZ
+    yN5ho9gHb+kynA1OPgZZOhTPSi8BLF1R+Ln7zrKbwsqr2e0aocCAibzfwOoBDdsu
+    6xsDNSLYK1a5K4y+Xp15XoVepwYla3nlgoHxdY544kDIqtCcYVjGjQwuJHHseFYM
+    ggP+U7ECgYEA64iHjLBOkRVHYtiCZnN3GgTosmi4VRhyxp4vD7snMppcVRyn4GGV
+    DmtqDkxf3qZ58EFBL7w94D5Whi9fxRexRK2gK5PSYPfxl5Ju35sNnOdTj97B+ntq
+    O7mH/qMjpiL1Fh+YGTkx3RUokdC+LT7aVZ2qb8Y0MnvqDl0V1VS0A6MCgYEA3w79
+    4VVBmPR0Crbc5NFV4BAFSAXDHriMdNRSctMRBVct0MNjWjAcOJ4yNvtWLQDnhk0l
+    y8A2tuTXlj9q6HwMUW77UKruvAg9jWa6fU55U2jFth4ok5VI9Nmzh9N28T/fYG7K
+    FyyhGt0Ulb8zCWyG085lCv0qT6RTfmDKJ64qkT0CgYEA4eT81CMYBy/YWmX6ktX1
+    CcBhiRLEj+C12+ZEjprZmj/PhFXKcHpGoiDFA9eeLwWNd66uHWE2GwbOpz1yZa42
+    dv7q2kCZCiVi0RNBQTYNlUmLrDVh56FMHuHvG3pNq35lfwVoM/DV8Qrk8Qy6CNz6
+    PBjOKQt4bl7H+WSvlv349G8CgYB2oJx4yES4udk1EYds0b/gB+UnJplcrz1TrM+k
+    bYfx1Slyi1c9UbTQj6GZCBYOnRqEnGbrc3Al2JKnP1b2CXLrpCBYCHAq5B8IIogv
+    uBpiN6hecK+XvZ8tSNJn/BiXuSZtPL6RkJSlmsol0aes7WDPKEcojvd/n58f6Q3a
+    CJBu6QKBgF6pMb7dXuafom1xUqRZxP61cJ+PDncOCNojAPfgHPuZj0A7wmJTame+
+    wFAnsHGFmsZ5C3IMFXWuw725I5RP5gxtFakahGE18SXsG4w+gB06MQAi+Y3DIAHP
+    JWhKd+Vqje3+nRK9uHV+Qu1Xh65M1oCxgye0kDh/SDhio16Pw8Fq
+    -----END RSA PRIVATE KEY-----

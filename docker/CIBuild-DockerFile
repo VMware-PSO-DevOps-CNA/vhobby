@@ -1,0 +1,41 @@
+FROM alpine:3.5
+
+MAINTAINER Frank Carta <fcarta@vmware.com>
+
+ARG ssh_prv_key
+ARG ssh_pub_key
+
+ENV TERRAFORM_VERSION 0.9.11
+
+# Download and install Terraform.
+RUN echo "Installing Terraform" \
+    && mkdir /tmp/terraform \
+    && cd /tmp/terraform \
+    && apk add --update bash curl ca-certificates openssh-client git unzip \
+    && curl -O -sS -L https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+    && unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+    && apk del unzip \
+    && mv terraform* /usr/local/bin \
+    && rm -rf /var/cache/apk/* \
+    && rm -rf /tmp/terraform
+
+# Install Ansible
+RUN echo "Installing Ansible" \
+    && apk --update add sudo python py-pip openssl ca-certificates \
+    && apk --update add --virtual build-dependencies python-dev libffi-dev openssl-dev build-base \
+    && pip install --upgrade pip cffi \
+    && pip install ansible
+
+# Authorize SSH Host
+RUN mkdir -p /root/.ssh \
+    && chmod 0700 /root/.ssh \
+    && ssh-keyscan github.com > /root/.ssh/known_hosts
+
+# Add the keys and set permissions
+RUN echo "$ssh_prv_key" > /root/.ssh/vmcloud \
+    && echo "$ssh_pub_key" > /root/.ssh/vmcloud.pub \
+    && chmod 600 /root/.ssh/vmcloud \
+    && chmod 600 /root/.ssh/vmcloud.pub
+
+# Leave container running for now
+ENTRYPOINT ["tail", "-f", "/dev/null"]

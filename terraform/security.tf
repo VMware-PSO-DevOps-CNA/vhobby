@@ -10,8 +10,8 @@ resource "openstack_compute_secgroup_v2" "secgroup_vmwdemo" {
   }
 
   rule {
-    from_port   = "${terraform.env == "dev" ? 6300 : 6379}"
-    to_port     = "${terraform.env == "dev" ? 6400 : 6379}"
+    from_port   = "${terraform.env == "test" ? 6300 : 6379}"
+    to_port     = "${terraform.env == "test" ? 6400 : 6379}"
     ip_protocol = "tcp"
     cidr        = "0.0.0.0/0"
   }

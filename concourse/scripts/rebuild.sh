@@ -1,0 +1,26 @@
+#!/bin/sh
+
+set -e -u -x
+
+terraform_env=$1
+
+echo "Running terraform to rebuild $terraform_env"
+cd terraform
+terraform env select $terraform_env
+# Dont think wildcard is working for taint yet and dont want to run destroy 
+terraform taint openstack_networking_network_v2.network_vmwdemo
+terraform taint openstack_compute_secgroup_v2.secgroup_vmwdemo
+terraform taint openstack_networking_router_v2.router_vmwdemo
+terraform taint openstack_networking_subnet_v2.subnet_vmwdemo
+terraform taint openstack_networking_router_interface_v2.router_interface_vmwdemo
+terraform taint openstack_networking_port_v2.port_vmwdemo_web
+terraform taint openstack_networking_port_v2.port_vmwdemo_redis_master
+terraform taint openstack_networking_port_v2.port_vmwdemo_redis_slave
+terraform taint openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master
+terraform taint openstack_networking_floatingip_v2.floatip_vmwdemo_web
+terraform taint openstack_networking_floatingip_v2.floatip_vmwdemo_redis_slave
+terraform taint null_resource.inventory_and_vars_setup
+terraform taint openstack_compute_instance_v2.instance_vmwdemo_redis_slave
+terraform taint openstack_compute_instance_v2.instance_vmwdemo_redis_master
+terraform taint openstack_compute_instance_v2.instance_vmwdemo_web
+terraform apply
