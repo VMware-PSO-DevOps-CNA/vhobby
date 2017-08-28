@@ -9,9 +9,13 @@ image_resource:
 
 inputs:
 - name: project_src
+- name: terraform_state_test
+- name: terraform_vars_test
 
 run:
   dir: project_src
   args:
     - test
+    - terraform_state_test
+    - terraform_vars_test
   path: concourse/scripts/deploy.sh

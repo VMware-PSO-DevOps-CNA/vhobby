@@ -1,3 +1,10 @@
+resource_types:
+- name: file-url
+  type: docker-image
+  source:
+    repository: pivotalservices/concourse-curl-resource
+    tag: latest
+
 resources:
   - name: vhobby-project
     type: git
@@ -5,13 +12,28 @@ resources:
       uri:  ((project_src_uri))
       branch: ((project_src_branch))
       private_key: ((project_src_private_key))
+  - name: terraform_state_test
+    type: file-url
+    source:
+      url: http://thelockerwa.com/terraform/test/terraform.tfstate
+      filename: terraform.tfstate
+  - name: terraform_vars_test
+    type: file-url
+    source:
+      url: http://thelockerwa.com/terraform/terraform.tfvars
+      filename: terraform.tfvars
 
 jobs:
 - name: vhobby-release-pipeline-test
   plan:
-  - get: vhobby-project
-    trigger: true
+  - aggregate:
+      - get: vhobby-project
+        trigger: true
+      - get: terraform_state_test
+      - get: terraform_vars_test
   - task: release-to-test
     file: vhobby-project/concourse/tasks/deployTest.yml
     input_mapping:
-        project_src: .
+        project_src: vhobby-project
+        terraform_state: terraform_state_test
+        terraform_vars: terraform_vars_test
