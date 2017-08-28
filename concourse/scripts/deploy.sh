@@ -8,7 +8,7 @@ echo "Copying state and var files"
 mkdir -p terraform/.terraform
 echo $terraform_env > terraform/.terraform/environment
 mkdir -p terraform/terraform.tfstate.d/$terraform_env
-cp ../terraform_state_test/terraform.tfstate terraform/terraform.tfstate/$terraform_env/terraform.tfstate
+cp ../terraform_state_test/terraform.tfstate terraform/terraform.tfstate.d/$terraform_env/terraform.tfstate
 cp ../terraform_vars_test/terraform.tfvars terraform/terraform.tfvars
 
 cat terraform/.terraform/environment
