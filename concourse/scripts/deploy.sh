@@ -5,9 +5,13 @@ set -e -u -x
 terraform_env=$1
 
 echo "Copying state and var files"
-mkdir -p terraform/terraform.tfstate/$terraform_env
+mkdir -p terraform/.terraform
+echo $terraform_env > terraform/.terraform/environment
+mkdir -p terraform/terraform.tfstate.d/$terraform_env
 cp ../terraform_state_test/terraform.tfstate terraform/terraform.tfstate/$terraform_env/terraform.tfstate
 cp ../terraform_vars_test/terraform.tfvars terraform/terraform.tfvars
+
+cat terraform/.terraform/environment
 
 echo "Running terraform to update ansible hosts and variables for $terraform_env"
 cd terraform
