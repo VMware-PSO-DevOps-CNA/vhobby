@@ -13,9 +13,8 @@ inputs:
 - name: terraform_vars_test
 
 run:
-  dir: project_src
+  path: /bin/sh
   args:
-    - test
-    - terraform_state_test
-    - terraform_vars_test
-  path: concourse/scripts/deploy.sh
+    - |
+      cd project_src
+      concourse/scripts/deploy.sh
