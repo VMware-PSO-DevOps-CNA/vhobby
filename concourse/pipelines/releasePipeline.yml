@@ -1,10 +1,3 @@
-resource_types:
-- name: file-url
-  type: docker-image
-  source:
-    repository: pivotalservices/concourse-curl-resource
-    tag: latest
-
 resources:
 - name: vhobby-project
   type: git
@@ -13,12 +6,45 @@ resources:
     branch: ((project_src_branch))
     private_key: ((project_src_private_key))
 
+
+
+
 jobs:
-- name: vhobby-release-pipeline-test
+- name: vhobby-release-pipeline-deploy-test
   plan:
   - get: vhobby-project
     trigger: true
   - task: release-to-test
     file: vhobby-project/concourse/tasks/deployTest.yml
+    input_mapping:
+        project_src: vhobby-project
+  - task: validate-test
+    file: vhobby-project/concourse/tasks/runTestsTest.yml
+    input_mapping:
+        project_src: vhobby-project
+
+- name: vhobby-release-pipeline-deploy-stage
+  plan:
+  - get: vhobby-project
+    passed: [vhobby-release-pipeline-deploy-test]
+  - task: release-to-stage
+    file: vhobby-project/concourse/tasks/deployStage.yml
+    input_mapping:
+        project_src: vhobby-project
+  - task: validate-stage
+    file: vhobby-project/concourse/tasks/runTestsStage.yml
+    input_mapping:
+        project_src: vhobby-project
+
+- name: vhobby-release-pipeline-deploy-prod
+  plan:
+  - get: vhobby-project
+    passed: [vhobby-release-pipeline-deploy-stage]
+  - task: release-to-prod
+    file: vhobby-project/concourse/tasks/deployProd.yml
+    input_mapping:
+        project_src: vhobby-project
+  - task: validate-prod
+    file: vhobby-project/concourse/tasks/runTestsProd.yml
     input_mapping:
         project_src: vhobby-project

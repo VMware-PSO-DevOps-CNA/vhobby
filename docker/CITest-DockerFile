@@ -1,0 +1,18 @@
+FROM selenium/standalone-firefox
+
+MAINTAINER Frank Carta <fcarta@vmware.com>
+
+RUN echo "Updating libs" \
+    && sudo apt-get update \
+    && sudo apt-get install sudo curl php phpunit php-curl vim -y
+
+RUN echo "Installing composer for webdriver" \
+    && cd home/seluser \
+    && echo "{\"require-dev\": {\"phpunit/phpunit\": \"*\",\"facebook/webdriver\": \"dev-master\"}}" > composer.json \
+    && curl -sS https://getcomposer.org/installer | php \
+    && php composer.phar install
+
+EXPOSE 4444
+
+# Leave container running for now
+ENTRYPOINT ["tail", "-f", "/dev/null"]
