@@ -1,8 +1,6 @@
 /bin/
 /.classpath
 /.project
-*.tfvars
-*.tfstate*
 *.retry
 ansible/test/hosts
 ansible/stage/hosts

@@ -1,0 +1,13 @@
+user_name = "frank"
+tenant_name = "frank"
+password = "VMware1!"
+auth_url = "https://10.40.206.155:5000/v2.0"
+external_gateway = "d5c89e0d-75e0-4806-867a-19ece99226f0"
+subnet_cidr = "192.168.199.0/24"
+db_image_id = "5463ff57-bd36-40fd-90d3-d2001c8f5e9e"
+web_image_id = "c658811b-5698-4bae-8d28-48e806a95d92"
+ansible_user = "bitnami"
+flavor_id = "3"
+key_pair = "vmcloud"
+redis_port = 6379
+redis_password = "4eaaa6ff701ff7674ba408b71b09a5448e9814cdadab3b9a41766450f5f4225a"

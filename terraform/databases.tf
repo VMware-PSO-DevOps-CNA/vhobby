@@ -8,12 +8,16 @@ resource "openstack_networking_port_v2" "port_vmwdemo_redis_master" {
   fixed_ip {
       "subnet_id" =  "${openstack_networking_subnet_v2.subnet_vmwdemo.id}"
   }
+
+  depends_on = ["openstack_networking_subnet_v2.subnet_vmwdemo"]
 }
 
 resource "openstack_networking_floatingip_v2" "floatip_vmwdemo_redis_master" {
   region = "nova"
   pool = "ext-net"
   port_id = "${openstack_networking_port_v2.port_vmwdemo_redis_master.id}"
+
+  depends_on = ["openstack_networking_port_v2.port_vmwdemo_redis_master"]
 }
 
 # Create a redis master server
@@ -22,7 +26,7 @@ resource "openstack_compute_instance_v2" "instance_vmwdemo_redis_master" {
   image_id = "${var.db_image_id}"
   flavor_id = "${var.flavor_id}"
   key_pair = "${var.key_pair}"
-  depends_on = ["null_resource.inventory_and_vars_setup"]
+  depends_on = ["openstack_networking_floatingip_v2.floatip_vmwdemo_redis_master", "null_resource.inventory_and_vars_setup"]
 
   network {
     port = "${openstack_networking_port_v2.port_vmwdemo_redis_master.id}"
@@ -56,12 +60,16 @@ resource "openstack_networking_port_v2" "port_vmwdemo_redis_slave" {
   fixed_ip {
       "subnet_id" =  "${openstack_networking_subnet_v2.subnet_vmwdemo.id}"
   }
+
+  depends_on = ["openstack_networking_subnet_v2.subnet_vmwdemo"]
 }
 
 resource "openstack_networking_floatingip_v2" "floatip_vmwdemo_redis_slave" {
   region = "nova"
   pool = "ext-net"
   port_id = "${openstack_networking_port_v2.port_vmwdemo_redis_slave.id}"
+
+  depends_on = ["openstack_networking_port_v2.port_vmwdemo_redis_slave"]
 }
 
 # Create a redis slave server
@@ -70,7 +78,7 @@ resource "openstack_compute_instance_v2" "instance_vmwdemo_redis_slave" {
   image_id = "${var.db_image_id}"
   flavor_id = "${var.flavor_id}"
   key_pair = "${var.key_pair}"
-  depends_on = ["null_resource.inventory_and_vars_setup"]
+  depends_on = ["openstack_networking_floatingip_v2.floatip_vmwdemo_redis_slave", "null_resource.inventory_and_vars_setup"]
 
   network {
     port = "${openstack_networking_port_v2.port_vmwdemo_redis_slave.id}"

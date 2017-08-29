@@ -29,4 +29,6 @@ resource "openstack_compute_secgroup_v2" "secgroup_vmwdemo" {
     ip_protocol = "icmp"
     cidr        = "0.0.0.0/0"
   }
+  
+  depends_on = ["openstack_networking_subnet_v2.subnet_vmwdemo"]
 }

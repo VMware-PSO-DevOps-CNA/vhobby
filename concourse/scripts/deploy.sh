@@ -8,8 +8,8 @@ echo "Preparing terraform and ansible files"
 mkdir -p terraform/.terraform
 echo $terraform_env > terraform/.terraform/environment
 mkdir -p terraform/terraform.tfstate.d/$terraform_env
-cp ../terraform_state_test/terraform.tfstate terraform/terraform.tfstate.d/$terraform_env/terraform.tfstate
-cp ../terraform_vars_test/terraform.tfvars terraform/terraform.tfvars
+cp ../terraform_state/terraform.tfstate terraform/terraform.tfstate.d/$terraform_env/terraform.tfstate
+cp ../terraform_vars/terraform.tfvars terraform/terraform.tfvars
 mkdir -p ansible/$terraform_env/group_vars
 
 echo "Running terraform to update ansible hosts and variables for $terraform_env"
