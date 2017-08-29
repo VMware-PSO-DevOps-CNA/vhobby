@@ -8,5 +8,6 @@ ansible/prod/hosts
 ansible/test/group_vars/all.yml
 ansible/stage/group_vars/all.yml
 ansible/prod/group_vars/all.yml
+concourse/concourse-lite-state.json
 .terraform
 .DS_Store
