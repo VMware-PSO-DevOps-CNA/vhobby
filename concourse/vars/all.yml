@@ -1,5 +1,5 @@
 project_src_uri: git@github.com:VMware-PSO-DevOps-CNA/vhobby.git
-project_src_branch: terraform
+project_src_branch: vmworlddemo
 project_src_private_key: |
     -----BEGIN RSA PRIVATE KEY-----
     MIIEowIBAAKCAQEAzTm5IDar8Pgta9smy/Zm1HW2gj5oeTtnNI/qtjhz9vm5hzJ/

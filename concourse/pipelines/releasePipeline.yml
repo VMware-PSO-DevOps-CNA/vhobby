@@ -6,9 +6,6 @@ resources:
     branch: ((project_src_branch))
     private_key: ((project_src_private_key))
 
-
-
-
 jobs:
 - name: vhobby-release-pipeline-deploy-test
   plan:
