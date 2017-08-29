@@ -15,5 +15,5 @@ run:
   args:
     - 10.40.207.221
     - vhobby
-    - 1
+    - 0
   path: concourse/scripts/test.sh
