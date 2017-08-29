@@ -15,8 +15,11 @@ exitcode=$3
 
 #/home/seluser/vendor/bin/phpunit webapp/tests/guestbookTests.php
 
+echo "Running Validation Tests..."
 if [ $3 -ne 0 ]; then
-    echo "Failed tests!"
+    echo "Tests Failed!"
+    exit 1
 fi
 
-exit $3
+echo "Tests Passed!"
+exit 1
