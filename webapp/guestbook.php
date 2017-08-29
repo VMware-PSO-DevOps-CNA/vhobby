@@ -17,7 +17,7 @@ if (isset($_GET['cmd']) === true) {
     $client = new Predis\Client([
       'scheme' => 'tcp',
       'host'   => $host,
-      'port'   => 6379,
+      'port'   => 6380,
       'password' => '4eaaa6ff701ff7674ba408b71b09a5448e9814cdadab3b9a41766450f5f4225a'
     ]);
 
@@ -31,7 +31,7 @@ if (isset($_GET['cmd']) === true) {
     $client = new Predis\Client([
       'scheme' => 'tcp',
       'host'   => $host,
-      'port'   => 6379,
+      'port'   => 6380,
       'password' => '4eaaa6ff701ff7674ba408b71b09a5448e9814cdadab3b9a41766450f5f4225a'
     ]);
 
