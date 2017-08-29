@@ -22,4 +22,4 @@ if [ $3 -ne 0 ]; then
 fi
 
 echo "Tests Passed!"
-exit 1
+exit 0
