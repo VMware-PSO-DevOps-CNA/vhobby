@@ -26,6 +26,7 @@ jobs:
 - name: vhobby-release-pipeline-deploy-stage
   plan:
   - get: vhobby-project
+    trigger: true
     passed: [vhobby-release-pipeline-deploy-test]
   - task: release-to-stage
     file: vhobby-project/concourse/tasks/deployStage.yml
@@ -39,6 +40,7 @@ jobs:
 - name: vhobby-release-pipeline-deploy-prod
   plan:
   - get: vhobby-project
+    trigger: true
     passed: [vhobby-release-pipeline-deploy-stage]
   - task: release-to-prod
     file: vhobby-project/concourse/tasks/deployProd.yml
