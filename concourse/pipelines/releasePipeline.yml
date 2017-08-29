@@ -21,6 +21,4 @@ jobs:
   - task: release-to-test
     file: vhobby-project/concourse/tasks/deployTest.yml
     input_mapping:
-      project_src: vhobby-project
-      terraform_state: vhobby-project/terraform/terraform.tfstate.d/test
-      terraform_vars: vhobby-project/terraform
+        project_src: vhobby-project

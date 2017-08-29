@@ -7,9 +7,6 @@ terraform_env=$1
 echo "Preparing terraform and ansible files"
 mkdir -p terraform/.terraform
 echo $terraform_env > terraform/.terraform/environment
-mkdir -p terraform/terraform.tfstate.d/$terraform_env
-cp ../terraform_state/terraform.tfstate terraform/terraform.tfstate.d/$terraform_env/terraform.tfstate
-cp ../terraform_vars/terraform.tfvars terraform/terraform.tfvars
 mkdir -p ansible/$terraform_env/group_vars
 
 echo "Running terraform to rebuild $terraform_env"

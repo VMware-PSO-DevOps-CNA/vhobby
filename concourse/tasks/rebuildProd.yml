@@ -9,8 +9,7 @@ image_resource:
 
 inputs:
 - name: project_src
-- name: terraform_state
-- name: terraform_vars
+
 run:
   dir: project_src
   args:
