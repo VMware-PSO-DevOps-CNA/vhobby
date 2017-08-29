@@ -6,12 +6,12 @@ resource_types:
     tag: latest
 
 resources:
-  - name: vhobby-project
-    type: git
-    source:
-      uri:  ((project_src_uri))
-      branch: ((project_src_branch))
-      private_key: ((project_src_private_key))
+- name: vhobby-project
+  type: git
+  source:
+    uri:  ((project_src_uri))
+    branch: ((project_src_branch))
+    private_key: ((project_src_private_key))
 
 jobs:
 - name: vhobby-release-pipeline-test
@@ -21,6 +21,6 @@ jobs:
   - task: release-to-test
     file: vhobby-project/concourse/tasks/deployTest.yml
     input_mapping:
-        project_src: vhobby-project
-        terraform_state: vhobby-project/terraform/terraform.tfstate.d/test
-        terraform_vars: vhobby-project/terraform
+      project_src: vhobby-project
+      terraform_state: vhobby-project/terraform/terraform.tfstate.d/test
+      terraform_vars: vhobby-project/terraform
